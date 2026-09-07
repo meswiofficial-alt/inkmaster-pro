@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Deployment base path: set to '' for root, '/subdir' for subdirectory installs -->
+    <meta name="base-url" content="/inkmaster_php" />
+    <title>InkMaster Pro</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/themes/dark.css" id="theme-stylesheet" />
+</head>
+<body class="theme-dark" id="app-body">
+    <!-- Loader -->
+    <div id="loader" class="loader-container">
+        <div class="tattoo-loader">
+            <svg viewBox="0 0 200 200" class="needle-svg">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#8B5CF6" stroke-width="2" opacity="0.2"/>
+                <path d="M100 20 L100 180" stroke="#8B5CF6" stroke-width="1" opacity="0.1"/>
+                <path d="M20 100 L180 100" stroke="#8B5CF6" stroke-width="1" opacity="0.1"/>
+                <path class="needle-path" d="M100 20 Q140 60 140 100 Q140 140 100 180 Q60 140 60 100 Q60 60 100 20" 
+                      fill="none" stroke="#8B5CF6" stroke-width="3"/>
+                <circle class="needle-dot" cx="100" cy="20" r="4" fill="#8B5CF6">
+                    <animate attributeName="cy" values="20;180;20" dur="2s" repeatCount="indefinite"/>
+                    <animate attributeName="r" values="4;2;4" dur="2s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+            <p class="loading-text">Inking your data...</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="hidden">
+        <!-- Authentication -->
+        <div id="auth-container">
+            <!-- Login Page -->
+            <div id="login-page" class="auth-page flex items-center justify-center min-h-screen p-4">
+                <div class="glass-card max-w-md w-full p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-block p-3 bg-purple-100 rounded-2xl mb-4">
+                            <i class="fas fa-tattoo text-4xl text-purple-600"></i>
+                        </div>
+                        <h1 class="text-4xl font-black text-purple-600">InkMaster</h1>
+                        <p class="text-gray-500 font-light mt-1">Professional Tattoo Studio Management</p>
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <div class="flex border-b border-white/20 mb-6">
+                        <button class="auth-tab active flex-1 py-2 font-medium text-purple-600 border-b-2 border-purple-600" data-tab="login">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+                        </button>
+                        <button class="auth-tab flex-1 py-2 font-medium text-gray-500 hover:text-purple-600" data-tab="signup">
+                            <i class="fas fa-user-plus mr-2"></i> Sign Up
+                        </button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form space-y-6">
+                        <div class="form-group">
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="login-email" class="glass-input w-full" placeholder="admin@inkmaster.com" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="login-password" class="glass-input w-full" placeholder="••••••••" required />
+                            </div>
+                            <div class="text-right mt-1">
+                                <a href="#" onclick="showForgotPassword()" class="text-sm text-purple-600 hover:underline">Forgot password?</a>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full">
+                            <i class="fas fa-arrow-right mr-2"></i> Sign In
+                        </button>
+                    </form>
+                    
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form space-y-6" >
+                        <div class="form-group">
+                            <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="signup-name" class="glass-input w-full" placeholder="John Doe" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-at input-icon"></i>
+                                <input type="text" id="signup-username" class="glass-input w-full" placeholder="johndoe" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="signup-email" class="glass-input w-full" placeholder="john@example.com" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="signup-password" class="glass-input w-full" placeholder="Min 8 characters" required minlength="8" />
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-info-circle"></i> Must be at least 8 characters with uppercase, lowercase, and numbers
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-confirm" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-check-circle input-icon"></i>
+                                <input type="password" id="signup-confirm" class="glass-input w-full" placeholder="Confirm password" required />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <select id="signup-role" class="glass-select w-full">
+                                <option value="artist">Tattoo Artist</option>
+                                <option value="staff">Studio Staff</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full">
+                            <i class="fas fa-user-plus mr-2"></i> Create Account
+                        </button>
+                        
+                        <div class="text-center text-sm text-gray-500">
+                            By signing up, you agree to our Terms of Service and Privacy Policy
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-container" class="hidden">
+            <!-- Floating Navigation -->
+            <nav class="floating-nav">
+                <div class="nav-trigger animated-icon-trigger">
+                    <span class="icon-glow-ring"></span>
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <ul class="nav-menu">
+                    <li data-page="dashboard" class="active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li data-page="clients">
+                        <i class="fas fa-users"></i>
+                        <span>Clients</span>
+                    </li>
+                    <li data-page="appointments">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Appointments</span>
+                    </li>
+                    <li data-page="financials">
+                        <i class="fas fa-coins"></i>
+                        <span>Financials</span>
+                    </li>
+                    <li data-page="inventory">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory</span>
+                    </li>
+                    <li data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                    <li id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Content -->
+            <main id="main-content" class="main-content">
+                <!-- Dashboard Page -->
+
+                <!-- User Profile Banner -->
+                <div class="user-profile-banner" id="user-profile-banner">
+                    <div class="profile-banner-content">
+                        <div class="profile-banner-avatar">
+                            <img id="banner-profile-img" src="https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=64" alt="Profile" />
+                            <span class="profile-banner-status"></span>
+                        </div>
+                        <div class="profile-banner-info">
+                            <h2 id="banner-profile-name">Welcome back, Artist</h2>
+                            <p id="banner-profile-email">artist@inkmaster.com</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-sm text-gray-500" >
+                                <i class="fas fa-clock"></i> <span id="current-time"></span>
+                            </div>
+                            <button id="refresh-dashboard" class="btn-secondary" style="display: none;">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button id="logout-btn-header" class="logout-btn-visible">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <section id="page-dashboard" class="page-content">
+                    
+                
+
+                    <!-- Dashboard Carousel - System Overview -->
+
+                    <div class="carousel-container dashboard-carousel mb-8">
+                        <div class="carousel" id="dashboard-carousel">
+                            <div class="carousel-slide active">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #0f0a2e 0%, #1e1b4b 30%, #312e81 70%, #4c1d95 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content dashboard-slide-content">
+                                    <div class="carousel-icon dashboard-icon-animated">
+                                        <i class="fas fa-tattoo"></i>
+                                        <span class="icon-pulse"></span>
+                                    </div>
+                                    <h3>Welcome to InkMaster Pro</h3>
+                                    <p>Your complete tattoo studio management system. Streamline operations, boost productivity, and grow your business with powerful tools designed for professional tattoo artists.</p>
+                                    <div class="dashboard-quick-actions">
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('clients')">
+                                            <i class="fas fa-users"></i>
+                                            <span>Clients</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('appointments')">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>Schedule</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('financials')">
+                                            <i class="fas fa-chart-line"></i>
+                                            <span>Finance</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('inventory')">
+                                            <i class="fas fa-boxes"></i>
+                                            <span>Inventory</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #1e1b4b 0%, #1e3a5f 30%, #0e7490 70%, #06b6d4 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content dashboard-slide-content">
+                                    <div class="carousel-icon dashboard-icon-animated icon-bounce">
+                                        <i class="fas fa-users"></i>
+                                        <span class="icon-ring"></span>
+                                    </div>
+                                    <h3>Client Management</h3>
+                                    <p>Build lasting relationships with your clients. Store detailed profiles, track preferences, manage appointments, and deliver personalized experiences.</p>
+                                    <div class="dashboard-quick-actions">
+                                        <button class="dashboard-action-btn pulse-animation" onclick="openClientModal()">
+                                            <i class="fas fa-user-plus"></i>
+                                            <span>Add Client</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('clients')">
+                                            <i class="fas fa-search"></i>
+                                            <span>Find Client</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="exportClients()">
+                                            <i class="fas fa-download"></i>
+                                            <span>Export</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content dashboard-slide-content">
+                                    <div class="carousel-icon dashboard-icon-animated icon-rotate">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span class="icon-glow"></span>
+                                    </div>
+                                    <h3>Appointment Scheduling</h3>
+                                    <p>Efficiently manage your calendar. Book consultations, schedule sessions, track progress, and never miss an appointment with automated reminders.</p>
+                                    <div class="dashboard-quick-actions">
+                                        <button class="dashboard-action-btn pulse-animation" onclick="openAppointmentModal()">
+                                            <i class="fas fa-plus-circle"></i>
+                                            <span>New Booking</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('appointments')">
+                                            <i class="fas fa-list"></i>
+                                            <span>View All</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('appointments')">
+                                            <i class="fas fa-clock"></i>
+                                            <span>Calendar</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #0d3b66 0%, #1e5f74 50%, #2a9d8f 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content dashboard-slide-content">
+                                    <div class="carousel-icon dashboard-icon-animated icon-bounce">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <span class="icon-ring"></span>
+                                    </div>
+                                    <h3>Financial Tracking</h3>
+                                    <p>Monitor your studio's financial health. Track income and expenses, generate reports, and make data-driven decisions to grow your business.</p>
+                                    <div class="dashboard-quick-actions">
+                                        <button class="dashboard-action-btn pulse-animation" onclick="openTransactionModal()">
+                                            <i class="fas fa-plus"></i>
+                                            <span>Add Transaction</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('financials')">
+                                            <i class="fas fa-file-invoice-dollar"></i>
+                                            <span>Reports</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="generateReport()">
+                                            <i class="fas fa-file-alt"></i>
+                                            <span>Generate</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #2d1b69 0%, #5b21b6 50%, #7c3aed 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content dashboard-slide-content">
+                                    <div class="carousel-icon dashboard-icon-animated icon-rotate">
+                                        <i class="fas fa-boxes-stacked"></i>
+                                        <span class="icon-glow"></span>
+                                    </div>
+                                    <h3>Inventory Control</h3>
+                                    <p>Keep your studio stocked and ready. Monitor supplies, set reorder alerts, track costs, and manage suppliers all in one place.</p>
+                                    <div class="dashboard-quick-actions">
+                                        <button class="dashboard-action-btn pulse-animation" onclick="openInventoryModal()">
+                                            <i class="fas fa-plus-square"></i>
+                                            <span>Add Item</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="app.loadPage('inventory')">
+                                            <i class="fas fa-warehouse"></i>
+                                            <span>Stock</span>
+                                        </button>
+                                        <button class="dashboard-action-btn" onclick="refreshInventory()">
+                                            <i class="fas fa-sync-alt"></i>
+                                            <span>Refresh</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-nav carousel-prev" onclick="moveCarousel('dashboard', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-next" onclick="moveCarousel('dashboard', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="dashboard-carousel-dots"></div>
+                    </div>
+                    
+                    <!-- Stats Cards - Premium Design -->
+                    <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-purple"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-header">
+                                    <div class="stat-icon-premium stat-icon-purple">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span class="stat-live-badge">
+                                        <span class="stat-live-dot"></span>
+                                        Live
+                                    </span>
+                                </div>
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Total Clients</p>
+                                    <p class="stat-value" id="total-clients">0</p>
+                                    <span class="stat-trend positive">+12%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-blue"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-header">
+                                    <div class="stat-icon-premium stat-icon-blue">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <span class="stat-live-badge">
+                                        <span class="stat-live-dot"></span>
+                                        Live
+                                    </span>
+                                </div>
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Today's Appointments</p>
+                                    <p class="stat-value" id="today-appointments">0</p>
+                                    <span class="stat-trend" id="appointment-change">+3 today</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-emerald"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-header">
+                                    <div class="stat-icon-premium stat-icon-emerald">
+                                        <i class="fas fa-arrow-trend-up"></i>
+                                    </div>
+                                    <span class="stat-live-badge">
+                                        <span class="stat-live-dot"></span>
+                                        Live
+                                    </span>
+                                </div>
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Monthly Revenue</p>
+                                    <p class="stat-value" id="monthly-revenue">0 KSH</p>
+                                    <span class="stat-trend positive">+8.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-rose"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-header">
+                                    <div class="stat-icon-premium stat-icon-rose">
+                                        <i class="fas fa-triangle-exclamation"></i>
+                                    </div>
+                                    <span class="stat-live-badge warning">
+                                        <span class="stat-live-dot warning"></span>
+                                        Alert
+                                    </span>
+                                </div>
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Low Stock Items</p>
+                                    <p class="stat-value" id="low-stock-items">0</p>
+                                    <span class="stat-trend negative" id="low-stock-status">Needs attention</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
+                    <!-- Charts and Tables -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass-card">
+                            <h3 class="font-semibold mb-4">Recent Transactions</h3>
+                            <div id="recent-transactions"></div>
+                        </div>
+                        <div class="glass-card">
+                            <h3 class="font-semibold mb-4">Upcoming Appointments</h3>
+                            <div id="upcoming-appointments"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Clients Page -->
+                <section id="page-clients" class="page-content hidden">
+                    <div class="page-header">
+                        <div>
+                            <h1 class="text-3xl font-bold">Clients</h1>
+                            <p class="text-gray-500">Manage your client database</p>
+                        </div>
+                        <button class="btn-primary" onclick="openClientModal()">
+                            <i class="fas fa-plus mr-2"></i> Add Client
+                        </button>
+                    </div>
+                    
+                    <!-- Clients Carousel -->
+                    <div class="carousel-container mb-6">
+                        <div class="carousel" id="clients-carousel">
+                            <div class="carousel-slide active">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3>Welcome to Clients</h3>
+                                    <p>Your central hub for managing all client relationships. Keep track of contact details, appointment history, and tattoo preferences.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-plus"></i> Add new clients</span>
+                                        <span class="carousel-tag"><i class="fas fa-search"></i> Search & filter</span>
+                                        <span class="carousel-tag"><i class="fas fa-download"></i> Export data</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #3730a3 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-address-book"></i>
+                                    </div>
+                                    <h3>Client Profiles</h3>
+                                    <p>Store detailed profiles including contact info, tattoo preferences, allergies, and medical notes for each client.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-user-circle"></i> Detailed profiles</span>
+                                        <span class="carousel-tag"><i class="fas fa-heart"></i> Preferences</span>
+                                        <span class="carousel-tag"><i class="fas fa-shield-alt"></i> Medical notes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #312e81 0%, #5b21b6 50%, #7c3aed 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <h3>Appointment History</h3>
+                                    <p>View complete appointment history for each client. Track visits, services rendered, and upcoming bookings.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-calendar"></i> Visit tracking</span>
+                                        <span class="carousel-tag"><i class="fas fa-chart-line"></i> Analytics</span>
+                                        <span class="carousel-tag"><i class="fas fa-bell"></i> Reminders</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-nav carousel-prev" onclick="moveCarousel('clients', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-next" onclick="moveCarousel('clients', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="clients-carousel-dots"></div>
+                    </div>
+                    
+                    <!-- Search and Filter -->
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="input-wrapper">
+                                <i class="fas fa-search input-icon"></i>
+                                <input type="text" id="client-search" class="glass-input w-full" placeholder="Search clients..." />
+                            </div>
+                        </div>
+                        <select id="client-filter" class="glass-select">
+                            <option value="all">All Clients</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="recent">Recently Added</option>
+                        </select>
+                        <button class="btn-secondary" onclick="exportClients()">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
+                    </div>
+                    
+                    <!-- Clients Table -->
+                    <div class="table-card">
+                        <div class="bubbles-container" id="clients-bubbles"></div>
+                        <div class="overflow-x-auto relative">
+                            <table class="table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Balance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clients-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Client Balance/History Modal -->
+                <div id="client-balance-modal" class="modal hidden">
+                    <div class="modal-overlay" onclick="closeClientBalanceModal()"></div>
+                    <div class="modal-content glass-card client-balance-content">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-white"><i class="fas fa-file-invoice-dollar mr-2"></i>Client Balance & History</h2>
+                            <button onclick="closeClientBalanceModal()" class="text-slate-400 hover:text-white">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="client-balance-header">
+                            <div class="client-balance-avatar">
+                                <img id="balance-client-img" src="https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=48" alt="Client" />
+                            </div>
+                            <div class="client-balance-info">
+                                <h3 id="balance-client-name" class="text-lg font-semibold text-white">Client Name</h3>
+                                <p id="balance-client-contact" class="text-sm text-slate-400">client@email.com</p>
+                            </div>
+                            <div class="client-balance-amount">
+                                <span class="balance-label">Outstanding</span>
+                                <span id="balance-amount" class="balance-value">0 KSH</span>
+                            </div>
+                        </div>
+                        
+                        <div class="balance-actions">
+                            <button class="btn-primary btn-sm" onclick="addPayment()">
+                                <i class="fas fa-plus mr-1"></i> Add Payment
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="editBalanceClient()">
+                                <i class="fas fa-edit mr-1"></i> Edit Client
+                            </button>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-white mt-6 mb-4">Payment History</h3>
+                        <div id="balance-transactions" class="balance-transactions">
+                            <p class="text-slate-400 text-center py-8">No transactions found.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Client History Modal -->
+                <div id="client-history-modal" class="modal hidden">
+                    <div class="modal-overlay" onclick="closeClientHistoryModal()"></div>
+                    <div class="modal-content glass-card client-history-content">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="flex items-center gap-4">
+                                <img id="client-history-avatar" src="https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=48" class="client-history-avatar" />
+                                <div>
+                                    <h2 id="client-history-name" class="text-xl font-bold text-white">Client Name</h2>
+                                    <p id="client-history-email" class="text-sm text-slate-400">client@email.com</p>
+                                </div>
+                            </div>
+                            <button onclick="closeClientHistoryModal()" class="text-slate-400 hover:text-white">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="client-history-stats">
+                            <div class="client-history-stat">
+                                <div class="stat-with-edit">
+                                    <span id="client-total-spent" class="client-history-stat-value">0 KSH</span>
+                                    <button class="stat-edit-btn" onclick="editClientKsh()" title="Edit Total Spent">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                                <span class="client-history-stat-label">Total Spent</span>
+                            </div>
+                            <div class="client-history-stat">
+                                <div class="stat-with-edit">
+                                    <span id="client-total-visits" class="client-history-stat-value">0</span>
+                                    <button class="stat-edit-btn" onclick="editClientVisits()" title="Edit Visits">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                                <span class="client-history-stat-label">Total Visits</span>
+                            </div>
+                            <div class="client-history-stat">
+                                <span id="client-last-visit" class="client-history-stat-value">-</span>
+                                <span class="client-history-stat-label">Last Visit</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-white mt-6 mb-4">Transaction History</h3>
+                        <div id="client-history-transactions" class="client-history-transactions">
+                            <p class="text-slate-400 text-center py-8">No transactions found for this client.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointments Page -->
+                <section id="page-appointments" class="page-content hidden">
+                    <div class="page-header">
+                        <div>
+                            <h1 class="text-3xl font-bold">Appointments</h1>
+                            <p class="text-gray-500">Schedule and manage your appointments</p>
+                        </div>
+                        <button class="btn-primary" onclick="openAppointmentModal()">
+                            <i class="fas fa-plus mr-2"></i> New Appointment
+                        </button>
+                    </div>
+                    
+                    <!-- Appointments Carousel -->
+                    <div class="carousel-container mb-6">
+                        <div class="carousel" id="appointments-carousel">
+                            <div class="carousel-slide active">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #1e1b4b 0%, #0f766e 50%, #06b6d4 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <h3>Schedule Management</h3>
+                                    <p>Efficiently manage your tattoo appointments. Book consultations, track session progress, and never miss a booking.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-plus"></i> New booking</span>
+                                        <span class="carousel-tag"><i class="fas fa-clock"></i> Time slots</span>
+                                        <span class="carousel-tag"><i class="fas fa-sync"></i> Reschedule</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #1e3a5f 0%, #0e7490 50%, #0891b2 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-palette"></i>
+                                    </div>
+                                    <h3>Service Tracking</h3>
+                                    <p>Track different tattoo services: new tattoos, touch-ups, consultations, cover-ups, and custom designs with duration tracking.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-spray-can"></i> New tattoos</span>
+                                        <span class="carousel-tag"><i class="fas fa-paint-brush"></i> Touch-ups</span>
+                                        <span class="carousel-tag"><i class="fas fa-lightbulb"></i> Consultations</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #134e4a 0%, #0f766e 50%, #14b8a6 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-clipboard-check"></i>
+                                    </div>
+                                    <h3>Status Monitoring</h3>
+                                    <p>Monitor appointment statuses in real-time. Track scheduled, in-progress, completed, and cancelled appointments.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-check-circle"></i> Completed</span>
+                                        <span class="carousel-tag"><i class="fas fa-spinner"></i> In progress</span>
+                                        <span class="carousel-tag"><i class="fas fa-times-circle"></i> Cancelled</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-nav carousel-prev" onclick="moveCarousel('appointments', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-next" onclick="moveCarousel('appointments', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="appointments-carousel-dots"></div>
+                    </div>
+                    
+                    <div class="glass-card mb-6">
+                        <div id="appointment-calendar"></div>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <h3 class="font-semibold text-white">Appointment List</h3>
+                                <div class="appointment-filters">
+                                    <button class="filter-btn active" id="filter-all" onclick="filterAppointments('all')">All</button>
+                                    <button class="filter-btn" id="filter-scheduled" onclick="filterAppointments('scheduled')">Scheduled</button>
+                                    <button class="filter-btn" id="filter-completed" onclick="filterAppointments('completed')">Completed</button>
+                                    <button class="filter-btn" id="filter-cancelled" onclick="filterAppointments('cancelled')">Cancelled</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bubbles-container" id="appointments-bubbles"></div>
+                        <div class="overflow-x-auto relative">
+                            <table class="table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Date & Time</th>
+                                        <th>Service</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appointments-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Financials Page -->
+                <section id="page-financials" class="page-content hidden">
+                    <div class="page-header">
+                        <div>
+                            <h1 class="text-3xl font-bold">Financials</h1>
+                            <p class="text-gray-500">Track income, expenses, and generate reports</p>
+                        </div>
+                        <button class="btn-primary" onclick="openTransactionModal()">
+                            <i class="fas fa-plus mr-2"></i> Add Transaction
+                        </button>
+                    </div>
+                    
+                    <!-- Financials Carousel -->
+                    <div class="carousel-container mb-6">
+                        <div class="carousel" id="financials-carousel">
+                            <div class="carousel-slide active">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h3>Financial Overview</h3>
+                                    <p>Monitor your studio's financial health. Track revenue, expenses, and profitability with real-time analytics.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-plus"></i> Record income</span>
+                                        <span class="carousel-tag"><i class="fas fa-minus"></i> Log expenses</span>
+                                        <span class="carousel-tag"><i class="fas fa-calculator"></i> Net profit</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #14532d 0%, #166534 50%, #22c55e 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <h3>Transaction Tracking</h3>
+                                    <p>Record every transaction with categories, payment methods, and descriptions. Support for cash, M-Pesa, bank transfer, and cards.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-money-bill"></i> Cash</span>
+                                        <span class="carousel-tag"><i class="fas fa-mobile-alt"></i> M-Pesa</span>
+                                        <span class="carousel-tag"><i class="fas fa-university"></i> Bank</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #065f46 0%, #059669 50%, #34d399 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <h3>Report Generation</h3>
+                                    <p>Generate detailed financial reports by date range. Analyze trends, export data, and make informed business decisions.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-calendar"></i> Date range</span>
+                                        <span class="carousel-tag"><i class="fas fa-file-pdf"></i> Export PDF</span>
+                                        <span class="carousel-tag"><i class="fas fa-chart-pie"></i> Analytics</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-nav carousel-prev" onclick="moveCarousel('financials', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-next" onclick="moveCarousel('financials', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="financials-carousel-dots"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-emerald"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Total Revenue</p>
+                                    <p class="stat-value text-emerald-400" id="total-revenue">0 KSH</p>
+                                    <span class="stat-trend positive">Income</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-rose"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Total Expenses</p>
+                                    <p class="stat-value text-rose-400" id="total-expenses">0 KSH</p>
+                                    <span class="stat-trend negative">Outgoing</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-purple"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Net Profit</p>
+                                    <p class="stat-value text-indigo-400" id="net-profit">0 KSH</p>
+                                    <span class="stat-trend positive">Net</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card-premium group">
+                            <div class="stat-glow stat-glow-blue"></div>
+                            <div class="stat-card-inner">
+                                <div class="stat-card-body">
+                                    <p class="stat-label">Total Transactions</p>
+                                    <p class="stat-value text-blue-400" id="total-transactions-count">0</p>
+                                    <span class="stat-trend positive">Records</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="flex flex-wrap gap-4 mb-6">
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-sm font-medium text-slate-300 mb-1">Date Range</label>
+                                <input type="date" id="report-start" class="glass-input w-full" style="padding-left: 16px;" />
+                            </div>
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-sm font-medium text-slate-300 mb-1">To</label>
+                                <input type="date" id="report-end" class="glass-input w-full" style="padding-left: 16px;" />
+                            </div>
+                            <div class="flex items-end gap-3">
+                                <button class="btn-primary btn-generate-report" onclick="generateReport()">
+                                    <i class="fas fa-file-alt mr-2"></i> Generate Report
+                                </button>
+                                <button class="btn-secondary" onclick="exportReportToExcel()">
+                                    <i class="fas fa-file-excel mr-2"></i> Export Excel
+                                </button>
+                            </div>
+                        </div>
+                        <div id="financial-report"></div>
+                    </div>
+                </section>
+
+                <!-- Inventory Page -->
+                <section id="page-inventory" class="page-content hidden">
+                    <div class="page-header">
+                        <div>
+                            <h1 class="text-3xl font-bold">Inventory</h1>
+                            <p class="text-gray-500">Track and manage your supplies</p>
+                        </div>
+                        <button class="btn-primary" onclick="openInventoryModal()">
+                            <i class="fas fa-plus mr-2"></i> Add Item
+                        </button>
+                    </div>
+                    
+                    <!-- Inventory Carousel -->
+                    <div class="carousel-container mb-6">
+                        <div class="carousel" id="inventory-carousel">
+                            <div class="carousel-slide active">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #8b5cf6 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-boxes-stacked"></i>
+                                    </div>
+                                    <h3>Inventory Management</h3>
+                                    <p>Keep track of all your tattoo supplies. Monitor stock levels, reorder points, and never run out of essential items.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-plus"></i> Add items</span>
+                                        <span class="carousel-tag"><i class="fas fa-search"></i> Search inventory</span>
+                                        <span class="carousel-tag"><i class="fas fa-filter"></i> Filter by category</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #581c87 0%, #7c3aed 50%, #a78bfa 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-spray-can"></i>
+                                    </div>
+                                    <h3>Supply Categories</h3>
+                                    <p>Organize supplies by category: ink pigments, needles & tubes, sanitation & safety, office supplies, and merchandise.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-palette"></i> Inks</span>
+                                        <span class="carousel-tag"><i class="fas fa-syringe"></i> Needles</span>
+                                        <span class="carousel-tag"><i class="fas fa-pump-soap"></i> Sanitation</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-bg" style="background: linear-gradient(135deg, #6b21a8 0%, #9333ea 50%, #c084fc 100%);">
+                                    <div class="carousel-pattern"></div>
+                                </div>
+                                <div class="carousel-content">
+                                    <div class="carousel-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <h3>Low Stock Alerts</h3>
+                                    <p>Get notified when items reach reorder levels. Track unit costs, suppliers, and storage locations for efficient restocking.</p>
+                                    <div class="carousel-actions">
+                                        <span class="carousel-tag"><i class="fas fa-exclamation-triangle"></i> Alerts</span>
+                                        <span class="carousel-tag"><i class="fas fa-truck"></i> Suppliers</span>
+                                        <span class="carousel-tag"><i class="fas fa-warehouse"></i> Locations</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-nav carousel-prev" onclick="moveCarousel('inventory', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-next" onclick="moveCarousel('inventory', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="inventory-carousel-dots"></div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="input-wrapper">
+                                <i class="fas fa-search input-icon"></i>
+                                <input type="text" id="inventory-search" class="glass-input w-full" placeholder="Search inventory..." />
+                            </div>
+                        </div>
+                        <select id="inventory-category" class="glass-select">
+                            <option value="all">All Categories</option>
+                            <option value="ink_pigments">Ink & Pigments</option>
+                            <option value="needles_tubes">Needles & Tubes</option>
+                            <option value="sanitation_safety">Sanitation & Safety</option>
+                            <option value="office_supplies">Office Supplies</option>
+                            <option value="merchandise">Merchandise</option>
+                        </select>
+                        <button class="btn-secondary" onclick="refreshInventory()">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="bubbles-container" id="inventory-bubbles"></div>
+                        <div class="overflow-x-auto relative">
+                            <table class="table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>SKU</th>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                        <th>Reorder Level</th>
+                                        <th>Unit Cost</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Page -->
+                <section id="page-settings" class="page-content hidden">
+                    <div class="page-header">
+                        <div>
+                            <h1 class="text-3xl font-bold">Settings</h1>
+                            <p class="text-gray-500">Customize your InkMaster experience</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Tabs -->
+                    <div class="flex flex-wrap gap-2 border-b border-white/20 mb-6">
+                        <button class="settings-tab active px-4 py-2 font-medium text-purple-600 border-b-2 border-purple-600" data-settings="theme">
+                            <i class="fas fa-palette mr-2"></i> Theme
+                        </button>
+                        <button class="settings-tab px-4 py-2 font-medium text-gray-500 hover:text-purple-600" data-settings="profile">
+                            <i class="fas fa-user mr-2"></i> Profile
+                        </button>
+                        <button class="settings-tab px-4 py-2 font-medium text-gray-500 hover:text-purple-600" data-settings="security">
+                            <i class="fas fa-shield-alt mr-2"></i> Security
+                        </button>
+                        <button class="settings-tab px-4 py-2 font-medium text-gray-500 hover:text-purple-600" data-settings="notifications">
+                            <i class="fas fa-bell mr-2"></i> Notifications
+                        </button>
+                        <button class="settings-tab px-4 py-2 font-medium text-gray-500 hover:text-purple-600" data-settings="business">
+                            <i class="fas fa-store mr-2"></i> Business
+                        </button>
+                    </div>
+                    
+                    <!-- Theme Settings -->
+                    <div id="settings-theme" class="settings-panel">
+                        <div class="glass-card">
+                            <h3 class="text-xl font-bold mb-4">Theme Customization</h3>
+                            <p class="text-gray-500 mb-6">Choose your preferred theme and color scheme</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                <div class="theme-option" data-theme="dark">
+                                    <div class="theme-preview rounded-lg p-4 cursor-pointer border-2 border-transparent hover:border-purple-500 transition-all">
+                                        <div class="h-8 w-full bg-gray-800 rounded mb-2"></div>
+                                        <div class="h-4 w-3/4 bg-gray-700 rounded mb-2"></div>
+                                        <div class="h-4 w-1/2 bg-gray-700 rounded"></div>
+                                    </div>
+                                    <p class="text-center mt-2 font-medium">Dark</p>
+                                </div>
+                                
+                                <div class="theme-option" data-theme="light">
+                                    <div class="theme-preview rounded-lg p-4 cursor-pointer border-2 border-transparent hover:border-purple-500 transition-all">
+                                        <div class="h-8 w-full bg-gray-200 rounded mb-2"></div>
+                                        <div class="h-4 w-3/4 bg-gray-100 rounded mb-2"></div>
+                                        <div class="h-4 w-1/2 bg-gray-100 rounded"></div>
+                                    </div>
+                                    <p class="text-center mt-2 font-medium">Light</p>
+                                </div>
+                                
+                                <div class="theme-option" data-theme="neon">
+                                    <div class="theme-preview rounded-lg p-4 cursor-pointer border-2 border-transparent hover:border-purple-500 transition-all">
+                                        <div class="h-8 w-full bg-black rounded mb-2 border border-purple-500"></div>
+                                        <div class="h-4 w-3/4 bg-black rounded mb-2 border border-pink-500"></div>
+                                        <div class="h-4 w-1/2 bg-black rounded border border-cyan-500"></div>
+                                    </div>
+                                    <p class="text-center mt-2 font-medium">Neon</p>
+                                </div>
+                                
+                                <div class="theme-option" data-theme="vintage">
+                                    <div class="theme-preview rounded-lg p-4 cursor-pointer border-2 border-transparent hover:border-purple-500 transition-all">
+                                        <div class="h-8 w-full bg-amber-200 rounded mb-2"></div>
+                                        <div class="h-4 w-3/4 bg-amber-100 rounded mb-2"></div>
+                                        <div class="h-4 w-1/2 bg-amber-100 rounded"></div>
+                                    </div>
+                                    <p class="text-center mt-2 font-medium">Vintage</p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-white/20 pt-6">
+                                <h4 class="font-semibold mb-4">Custom Colors</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Primary Color</label>
+                                        <input type="color" id="primary-color" class="glass-input w-full h-10 p-0 cursor-pointer" value="#8B5CF6" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Secondary Color</label>
+                                        <input type="color" id="secondary-color" class="glass-input w-full h-10 p-0 cursor-pointer" value="#6D28D9" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Accent Color</label>
+                                        <input type="color" id="accent-color" class="glass-input w-full h-10 p-0 cursor-pointer" value="#EC4899" />
+                                    </div>
+                                </div>
+                                <button class="btn-primary mt-4" onclick="saveThemeSettings()">
+                                    <i class="fas fa-save mr-2"></i> Save Theme
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Settings -->
+                    <div id="settings-profile" class="settings-panel hidden">
+                        <div class="glass-card">
+                            <div class="profile-settings-header">
+                                <div class="profile-settings-avatar">
+                                    <img id="settings-profile-img" src="https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=80" alt="Profile" />
+                                    <span class="profile-settings-status"></span>
+                                </div>
+                                <div class="profile-settings-info">
+                                    <h3 id="settings-display-name" class="settings-display-name">User Name</h3>
+                                    <p id="settings-display-role" class="settings-display-role">Artist</p>
+                                </div>
+                            </div>
+                            <form id="profile-form" class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Full Name</label>
+                                        <input type="text" id="profile-name" class="glass-input w-full" required />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Username</label>
+                                        <input type="text" id="profile-username" class="glass-input w-full" required />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Email</label>
+                                        <input type="email" id="profile-email" class="glass-input w-full" required />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Role</label>
+                                        <input type="text" id="profile-role" class="glass-input w-full" disabled />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Profile Image</label>
+                                    <input type="file" id="profile-image" class="glass-input w-full" accept="image/*" style="padding-left: 16px;" />
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save mr-2"></i> Update Profile
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Settings -->
+                    <div id="settings-security" class="settings-panel hidden">
+                        <div class="glass-card">
+                            <h3 class="text-xl font-bold mb-4">Security</h3>
+                            <form id="security-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Current Password</label>
+                                    <input type="password" id="current-password" class="glass-input w-full" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">New Password</label>
+                                    <input type="password" id="new-password" class="glass-input w-full" required minlength="8" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Confirm New Password</label>
+                                    <input type="password" id="confirm-password" class="glass-input w-full" required />
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-key mr-2"></i> Change Password
+                                </button>
+                            </form>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/20">
+                                <h4 class="font-semibold mb-4">Session Management</h4>
+                                <button class="btn-secondary" onclick="logoutAllDevices()">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout All Devices
+                                </button>
+                                <button class="btn-secondary ml-2" onclick="clearSession()">
+                                    <i class="fas fa-trash mr-2"></i> Clear Session
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings -->
+                    <div id="settings-notifications" class="settings-panel hidden">
+                        <div class="glass-card">
+                            <h3 class="text-xl font-bold mb-4">Notification Preferences</h3>
+                            <form id="notification-form" class="space-y-4">
+                                <div class="flex items-center justify-between py-2 border-b border-white/10">
+                                    <div>
+                                        <p class="font-medium">Appointment Reminders</p>
+                                        <p class="text-sm text-gray-500">Get notified before appointments</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="notify-appointments" class="sr-only peer" checked />
+                                        <div class="toggle-switch"></div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center justify-between py-2 border-b border-white/10">
+                                    <div>
+                                        <p class="font-medium">Low Stock Alerts</p>
+                                        <p class="text-sm text-gray-500">Get notified when items are low</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="notify-stock" class="sr-only peer" checked />
+                                        <div class="toggle-switch"></div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center justify-between py-2 border-b border-white/10">
+                                    <div>
+                                        <p class="font-medium">Payment Reminders</p>
+                                        <p class="text-sm text-gray-500">Get notified about pending payments</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="notify-payments" class="sr-only peer" checked />
+                                        <div class="toggle-switch"></div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center justify-between py-2">
+                                    <div>
+                                        <p class="font-medium">System Updates</p>
+                                        <p class="text-sm text-gray-500">Get notified about new features</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="notify-updates" class="sr-only peer" />
+                                        <div class="toggle-switch"></div>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save mr-2"></i> Save Preferences
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Settings -->
+                    <div id="settings-business" class="settings-panel hidden">
+                        <div class="glass-card">
+                            <h3 class="text-xl font-bold mb-4">Business Settings</h3>
+                            <form id="business-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Business Name</label>
+                                    <input type="text" id="business-name" class="glass-input w-full" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Currency</label>
+                                    <select id="business-currency" class="glass-select w-full">
+                                        <option value="KSH">Kenyan Shilling (KSH)</option>
+                                        <option value="USD">US Dollar (USD)</option>
+                                        <option value="EUR">Euro (EUR)</option>
+                                        <option value="GBP">British Pound (GBP)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Tax Rate (%)</label>
+                                    <input type="number" id="business-tax" class="glass-input w-full" step="0.01" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Default Appointment Duration (minutes)</label>
+                                    <input type="number" id="business-duration" class="glass-input w-full" />
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save mr-2"></i> Save Business Settings
+                                </button>
+                            </form>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/20">
+                                <h4 class="font-semibold mb-4">Data Management</h4>
+                                <button class="btn-secondary" onclick="exportData()">
+                                    <i class="fas fa-download mr-2"></i> Export All Data
+                                </button>
+                                <button class="btn-secondary ml-2" onclick="importData()">
+                                    <i class="fas fa-upload mr-2"></i> Import Data
+                                </button>
+                                <button class="btn-danger ml-2" onclick="clearAllData()">
+                                    <i class="fas fa-trash mr-2"></i> Clear All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-container" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content glass-card"></div>
+    </div>
+
+    <!-- Scripts (cache-busted with version parameter) -->
+    <script src="js/api.js?v=1.1"></script>
+    <script src="js/auth.js?v=1.1"></script>
+    <script src="js/app.js?v=1.1"></script>
+    <script src="js/components/dashboard.js?v=1.1"></script>
+    <script src="js/components/clients.js?v=1.1"></script>
+    <script src="js/components/appointments.js?v=1.1"></script>
+    <script src="js/components/financials.js?v=1.1"></script>
+    <script src="js/components/inventory.js?v=1.1"></script>
+    <script src="js/components/settings.js?v=1.1"></script>
+</body>
+</html>

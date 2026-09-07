@@ -1,0 +1,15 @@
+# Backend API directory — allow access
+# PHP files execute automatically on InfinityFree (CGI/FastCGI)
+# No special directives needed — Apache serves .php files by default.
+
+# Allow directory listing off
+Options -Indexes
+
+# Allow access
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+</IfModule>

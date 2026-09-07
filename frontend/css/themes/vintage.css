@@ -1,0 +1,77 @@
+:root {
+    --bg-primary: #fefaf0;
+    --bg-secondary: #f5e9da;
+    --bg-glass: rgba(255, 245, 238, 0.7);
+    --text-primary: #5d4037;
+    --text-secondary: #8d6e64;
+    --border-color: rgba(121, 85, 59, 0.3);
+    --shadow-color: rgba(93, 64, 55, 0.2);
+    --hover-bg: rgba(121, 85, 59, 0.08);
+    --card-bg: rgba(245, 235, 222, 0.7);
+}
+
+body.theme-vintage {
+    background: linear-gradient(135deg, #fefaf0 0%, #f5e9da 50%, #e0d0c0 100%);
+    color: var(--text-primary);
+    font-family: 'Georgia', serif;
+    background-attachment: fixed;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    border: 2px solid #8D6E63;
+    box-shadow: 
+        0 8px 32px var(--shadow-color),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-family: 'Georgia', serif;
+    border-radius: 8px;
+}
+
+.glass-input:focus {
+    border-color: #8D6E63;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 4px rgba(121, 85, 59, 0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #8D6E63, #5D4037);
+    box-shadow: 
+        0 4px 15px rgba(93, 64, 55, 0.3),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+    box-shadow: 
+        0 6px 25px rgba(93, 64, 55, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.floating-nav {
+    background: rgba(245, 235, 222, 0.9);
+    border-color: var(--border-color);
+}
+
+.nav-menu li:hover,
+.nav-menu li.active {
+    background: rgba(121, 85, 59, 0.2);
+    color: var(--text-primary);
+}
+
+.stat-info h3 {
+    color: var(--text-primary);
+}
+
+.stat-info p {
+    color: var(--text-secondary);
+}
+
+.auth-page {
+    background: linear-gradient(135deg, #fefaf0 0%, #f5e9da 50%, #e0d0c0 100%);
+}

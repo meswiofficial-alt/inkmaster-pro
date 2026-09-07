@@ -1,0 +1,90 @@
+:root {
+    --bg-primary: #f8f7fc;
+    --bg-secondary: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --hover-bg: rgba(0, 0, 0, 0.02);
+    --card-bg: rgba(255, 255, 255, 0.6);
+}
+
+body.theme-light {
+    background: linear-gradient(135deg, #f8f7fc 0%, #e8e6f0 50%, #d8d6e8 100%);
+    color: var(--text-primary);
+    background-attachment: fixed;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px var(--shadow-color);
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.glass-input:focus {
+    border-color: #8B5CF6;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.glass-input::placeholder,
+.glass-select::placeholder {
+    color: var(--text-secondary);
+}
+
+.glass-select {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.floating-nav {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--border-color);
+}
+
+.nav-menu li {
+    color: var(--text-secondary);
+}
+
+.nav-menu li:hover,
+.nav-menu li.active {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--text-primary);
+}
+
+.stat-info h3 {
+    color: var(--text-primary);
+}
+
+.stat-info p {
+    color: var(--text-secondary);
+}
+
+table thead {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+th {
+    color: var(--text-secondary);
+}
+
+td {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+tbody tr:hover {
+    background: var(--hover-bg);
+}
+
+.auth-page {
+    background: linear-gradient(135deg, #f8f7fc 0%, #e8e6f0 50%, #d8d6e8 100%);
+}

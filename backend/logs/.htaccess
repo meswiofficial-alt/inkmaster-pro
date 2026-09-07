@@ -1,0 +1,4 @@
+# Logs directory — deny all direct access
+# Log files may contain sensitive error details, session data, or PII
+RewriteEngine On
+RewriteRule ^ - [F,L]

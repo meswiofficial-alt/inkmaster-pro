@@ -1,0 +1,27 @@
+# =============================================================================
+# InkMaster Pro - Root .htaccess (InfinityFree Minimal)
+# =============================================================================
+# No rewrite rules. Let Apache serve files directly.
+# Only security blocks and frontend SPA fallback.
+
+Options -Indexes
+DirectoryIndex frontend/index.html
+
+# -----------------------------------------------------------------------------
+# Security: block sensitive paths
+# -----------------------------------------------------------------------------
+RewriteEngine On
+RewriteRule ^backend/(config|core|logs)/ - [F,L]
+RewriteRule ^backend/bootstrap\.php - [F,L]
+RewriteRule ^database/ - [F,L]
+RewriteRule ^\.env - [F,L]
+RewriteRule ^\. - [F,L]
+
+# -----------------------------------------------------------------------------
+# CORS
+# -----------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>

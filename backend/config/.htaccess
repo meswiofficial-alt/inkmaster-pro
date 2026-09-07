@@ -1,0 +1,4 @@
+# Config directory — deny all direct access
+# Contains database credentials and application constants
+RewriteEngine On
+RewriteRule ^ - [F,L]

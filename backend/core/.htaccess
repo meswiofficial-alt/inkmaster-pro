@@ -1,0 +1,4 @@
+# Core directory — deny all direct access
+# Contains application classes (Auth, Database, Router, Validator, Response, ErrorHandler)
+RewriteEngine On
+RewriteRule ^ - [F,L]

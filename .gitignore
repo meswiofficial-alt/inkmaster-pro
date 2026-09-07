@@ -1,0 +1,25 @@
+# Environment variables
+.env
+.env.*
+
+# Production credentials (not .env — InfinityFree blocks dotfiles)
+backend/config/env_config.php
+
+# Logs
+backend/logs/*.log
+
+# Vendor / dependencies
+node_modules/
+vendor/
+
+# Build artifacts
+*.cache
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store

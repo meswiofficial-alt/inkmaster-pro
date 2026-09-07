@@ -1,0 +1,10 @@
+# Frontend root .htaccess - Minimal for shared hosting compatibility
+AddDefaultCharset UTF-8
+Options -Indexes
+
+RewriteEngine On
+
+# SPA fallback: serve index.html for all non-file requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
