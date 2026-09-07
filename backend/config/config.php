@@ -2,45 +2,59 @@
 /**
  * InkMaster Pro - Application Configuration
  * 
- * Reads environment variables from Apache SetEnv directives (set in .htaccess)
- * or from env_config.php (for local development where .htaccess SetEnv
- * is not available). Falls back to defaults if neither is available.
+ * Reads environment variables in this order:
+ * 1. Apache SetEnv (from .htaccess) — via getenv() / $_SERVER
+ * 2. env_config.php (fallback) — direct PHP file
  * 
- * @see .env.example for available environment variables
+ * This works reliably on InfinityFree without depending on
+ * a single source.
  */
 
+// Helper to read env vars from multiple sources
 if (!function_exists('getEnvValue')) {
-    /**
-     * Get an environment variable from $_ENV, $_SERVER, or getenv()
-     * @param string $key The env key
-     * @param mixed $default Default value if not found
-     * @return string
-     */
     function getEnvValue($key, $default = null) {
-        if (isset($_ENV[$key]) && $_ENV[$key] !== '') return $_ENV[$key];
         if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') return $_SERVER[$key];
+        if (isset($_ENV[$key]) && $_ENV[$key] !== '') return $_ENV[$key];
         if (getenv($key) !== false) return getenv($key);
         return $default;
     }
 }
 
-// Try loading from env_config.php (local development fallback)
-$envFile = __DIR__ . '/env_config.php';
-if (file_exists($envFile) && !defined('ENV_LOADED')) {
-    $envConfig = require $envFile;
-    foreach ((array)$envConfig as $key => $value) {
-        if (!getEnvValue($key) || getEnvValue($key) === '') {
-            $_ENV[$key] = (string)$value;
-            $_SERVER[$key] = (string)$value;
-            putenv("$key=" . (string)$value);
+// Try SetEnv first (from backend/.htaccess)
+$env = [];
+$env['APP_ENV']     = getEnvValue('APP_ENV');
+$env['DB_HOST']     = getEnvValue('DB_HOST');
+$env['DB_PORT']     = getEnvValue('DB_PORT');
+$env['DB_NAME']     = getEnvValue('DB_NAME');
+$env['DB_USER']     = getEnvValue('DB_USER');
+$env['DB_PASSWORD'] = getEnvValue('DB_PASSWORD');
+$env['DB_CHARSET']  = getEnvValue('DB_CHARSET');
+$env['DB_PREFIX']   = getEnvValue('DB_PREFIX');
+
+// Fallback to env_config.php if SetEnv didn't provide values
+if (empty($env['DB_HOST']) || empty($env['DB_NAME'])) {
+    $file = __DIR__ . '/env_config.php';
+    if (file_exists($file)) {
+        $fallback = require $file;
+        foreach ((array)$fallback as $k => $v) {
+            if (empty($env[$k])) {
+                $env[$k] = $v;
+            }
         }
     }
-    define('ENV_LOADED', true);
 }
 
-// Application configuration
-define('APP_ENV', getEnvValue('APP_ENV', 'production'));
+// Define constants
+define('APP_ENV', $env['APP_ENV'] ?? 'production');
 define('APP_DEBUG', APP_ENV === 'development');
+
+define('DB_HOST', $env['DB_HOST'] ?? 'localhost');
+define('DB_PORT', (int)($env['DB_PORT'] ?? 3306));
+define('DB_NAME', $env['DB_NAME'] ?? 'ink_master_pro');
+define('DB_USER', $env['DB_USER'] ?? 'root');
+define('DB_PASSWORD', $env['DB_PASSWORD'] ?? '');
+define('DB_CHARSET', $env['DB_CHARSET'] ?? 'utf8mb4');
+define('DB_PREFIX', $env['DB_PREFIX'] ?? '');
 
 // Session configuration
 define('SESSION_LIFETIME', 3600);

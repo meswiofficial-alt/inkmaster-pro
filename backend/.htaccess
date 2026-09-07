@@ -1,18 +1,6 @@
-# Backend directory — environment variables + access control
-# Contains InfinityFree database credentials via SetEnv directives.
+# Backend directory — access control only
 Options -Indexes
 
-# --- Database Environment Variables ---
-SetEnv APP_ENV production
-SetEnv DB_HOST sql206.infinityfree.com
-SetEnv DB_PORT 3306
-SetEnv DB_NAME if0_42744737_XXX
-SetEnv DB_USER if0_42744737
-SetEnv DB_PASSWORD 95056604Melo
-SetEnv DB_CHARSET utf8mb4
-SetEnv DB_PREFIX none
-
-# --- Allow access ---
 <IfModule mod_authz_core.c>
     Require all granted
 </IfModule>
